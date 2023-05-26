@@ -219,10 +219,6 @@ until LLVM/Clang 14."
              (string-append "-DGCC_INSTALL_PREFIX="
                             (assoc-ref %build-inputs "gcc-lib"))
 
-             ;; Use a sane default include directory.
-             (string-append "-DC_INCLUDE_DIRS="
-                            (assoc-ref %build-inputs "libc")
-                            "/include")
              ,@(if (target-riscv64?)
                    (list "-DLIBOMP_LIBFLAGS=-latomic"
                          "-DCMAKE_SHARED_LINKER_FLAGS=-latomic")
