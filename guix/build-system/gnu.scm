@@ -191,14 +191,14 @@ flags for VARIABLE, the associated value is augmented."
            ((#:configure-flags flags)
             (let* ((var= (string-append variable "="))
                    (len  (string-length var=)))
-              `(cons ,(string-append var= value)
+              #~(cons ,(string-append var= value)
                      (map (lambda (flag)
                             (if (string-prefix? ,var= flag)
                                 (string-append
                                  ,(string-append var= value " ")
                                  (substring flag ,len))
                                 flag))
-                          ,flags)))))))
+                          #$flags)))))))
       (replacement
        (let ((replacement (package-replacement p)))
          (and replacement
