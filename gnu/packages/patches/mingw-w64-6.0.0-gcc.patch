@@ -1,39 +1,11 @@
 This patch includes
 
-   * mingw-w64-headers/include/winnt.h: compile fixes for1 gcc-4.9.3
-   * mingw-w64-headers/crt/math.h: Likewise
-   * mingw-w64-headers/crt/float.h (FLT_EPSILON,DBL_EPSILON,LDBL_EPSILON): Add
-   symbols.
-   * mingw-w64-headers/crt/stat.h (S_ISLNK,S_ISSOCK,S_ISUID,S_ISGID,S_ISLINK):
-   Add symbols.
-   (lstat): Add function.
-   * mingw-w64-headers/crt/_mingw_stat64.h: Likewise
-   * mingw-w64-headers/crt/stdlib.h (realpath): Add function.
+   * mingw-w64-headers/crt/math.h: compile fixes for1 gcc-4.9.3
 
 Needed for building with gcc-4.9.3 and using with cross-libtool-2.4.6.
 
 Upstream status: not yet presented upstream.
 
-diff --git a/mingw-w64-headers/crt/float.h b/mingw-w64-headers/crt/float.h
-index 5874f4e..bdf4ead 100644
---- a/mingw-w64-headers/crt/float.h
-+++ b/mingw-w64-headers/crt/float.h
-@@ -22,6 +22,15 @@
- #if (__GNUC__ < 4)
- #error Corrupt install of gcc-s internal headers, or search order was changed.
- #else
-+
-+        /* From gcc-4.9.3 float.h.  */
-+        #undef FLT_EPSILON
-+        #undef DBL_EPSILON
-+        #undef LDBL_EPSILON
-+        #define FLT_EPSILON	__FLT_EPSILON__
-+        #define DBL_EPSILON	__DBL_EPSILON__
-+        #define LDBL_EPSILON	__LDBL_EPSILON__
-+
- 	/* #include_next <float_ginclude.h> */
-
-    	/* Number of decimal digits, q, such that any floating-point number with q
 diff --git a/mingw-w64-headers/crt/math.h b/mingw-w64-headers/crt/math.h
 index 1e970f4..99a332f 100644
 --- a/mingw-w64-headers/crt/math.h
