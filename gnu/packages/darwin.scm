@@ -29,10 +29,10 @@
   #:use-module ((guix licenses) #:prefix license:))
 
 (define-public cctools
-  (let ((cctools-version "973.0.1")
-        (ld64-version "609")
+  (let ((cctools-version "986")
+        (ld64-version "711")
         (revision "0")
-        (commit "04663295d0425abfac90a42440a7ec02d7155fea"))
+        (commit "c74fafe86076713cb8e6f937af43b6df6da1f42d"))
     (package
       (name "cctools")
       (version (git-version (string-append cctools-version
@@ -47,30 +47,17 @@
                (url "https://github.com/tpoechtrager/cctools-port")
                (commit commit)))
          (sha256
-          (base32 "0vihfa8y64vvd3pxy8qh4mhcnzinxh9flpz9dvw4wch4zj2nnfjs"))
+          (base32 "1x4ixdnm0k4ai0fdgj4n70v18fbdcxrc8za5qilpcxk0q7lm6qrl"))
          (file-name (git-file-name name version))
          (snippet
           #~(begin
               (use-modules (guix build utils))
               (with-directory-excursion "cctools"
-                ;; use system libobjc2
-                (substitute* "configure.ac"
-                  (("AC_CONFIG_FILES[(]\\[libobjc2/Makefile][)]")
-                   ""))
-                (substitute* "Makefile.am"
-                  (("SUBDIRS=libobjc2 ")
-                   "SUBDIRS="))
-                (substitute* "otool/Makefile.am"
-                  (("\\$[(]top_builddir[)]/libobjc2/libobjc\\.la")
-                   "-lobjc")
-                  (("-I\\$[(]top_srcdir[)]/libobjc2")
-                   ""))
                 ;; delete files
                 (for-each (lambda (pth)
                             (when (file-exists? pth)
                               (delete-file-recursively pth)))
                           `("include/gnu/symseg.h" ;; obsolete
-                            "libobjc2" ;; unbundle
                             ;; generated files:
                             "compile"
                             "config.guess"
@@ -80,8 +67,7 @@
                             "ltmain.sh"
                             "missing"
                             ,@(find-files "." "^Makefile\\.in$"))))))))
-      (inputs (list libobjc2
-                    clang-toolchain))
+      (inputs (list clang-toolchain))
       (native-inputs (list libtool
                            autoconf
                            automake
