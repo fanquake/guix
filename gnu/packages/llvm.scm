@@ -609,7 +609,7 @@ output), and Binutils.")
   '(("14.0.6" . ("clang-14.0-libc-search-path.patch"))
     ("15.0.7" . ("clang-15.0-libc-search-path.patch"))
     ("16.0.6" . ("clang-16.0-libc-search-path.patch"))
-    ("17.0.5" . ("clang-17.0-libc-search-path.patch"))))
+    ("17.0.5" . ("clang-17.0-libc-search-path.patch" "clang-17.0-riscv-dsymutil-atomic.patch"))))
 
 (define (llvm-monorepo version)
   (origin
