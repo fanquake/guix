@@ -35,6 +35,7 @@
                                         #:key
                                         xgcc
                                         xbinutils
+                                        (runtime "msvcrt")
                                         with-winpthreads?)
   "Return a mingw-w64 for targeting MACHINE.  If XGCC or XBINUTILS is specified,
 use that gcc or binutils when cross-compiling.  If WITH-WINPTHREADS? is
@@ -87,7 +88,7 @@ specified, recurse and return a mingw-w64 with support for winpthreads."
                      ;;
                      ;; XXX: A new target to use UCRT can be introduced as
                      ;; the MSYS2 project does, e.g: x86_64-w64-ucrt-mingw32.
-                     "--with-default-msvcrt=msvcrt")
+                     #$(string-append "--with-default-msvcrt=" runtime))
              #:make-flags #~'("DEFS=-DHAVE_CONFIG_H -D__MINGW_HAS_DXSDK=1")
              #:phases
              #~(modify-phases %standard-phases
