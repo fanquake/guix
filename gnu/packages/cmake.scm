@@ -415,7 +415,7 @@ and workspaces that can be used in the compiler environment of your choice.")
 (define-public cmake-3.30
   (package
     (inherit cmake)
-    (version "3.30.3")
+    (version "3.30.5")
     (source (origin
               (method url-fetch)
               (uri (string-append "https://cmake.org/files/v"
@@ -423,7 +423,7 @@ and workspaces that can be used in the compiler environment of your choice.")
                                   "/cmake-" version ".tar.gz"))
               (sha256
                (base32
-                "1r48zym4dy4mvwzk704zh1vx9gb4a910f424ypvis28mcxdy2pbd"))))
+                "0vd8ambs4r7yzwwshba0l0pl0b7q566a0pq6gsdz5wh80njf2mcz"))))
     (native-inputs
      (modify-inputs (package-native-inputs cmake)
        ;; Avoid circular dependency with (gnu packages debug).  Note: cppdap
