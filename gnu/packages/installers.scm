@@ -44,8 +44,8 @@
 (define (make-nsis machine target-arch nsis-target-type)
   (let* ((triplet (string-append machine "-" "w64-mingw32"))
          (xbinutils (make-no-gprofng-binutils triplet))
-         (xlibc (cross-libc triplet))
-         (xgcc (cross-gcc triplet #:libc xlibc)))
+         (xlibc (cross-libc triplet #:xbinutils (make-no-gprofng-binutils triplet)))
+         (xgcc (cross-gcc triplet #:xbinutils (make-no-gprofng-binutils triplet) #:libc xlibc)))
     (package
       (name (string-append "nsis-" machine))
       (version "3.10")
