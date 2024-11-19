@@ -27,9 +27,23 @@
   #:use-module (guix build-system scons)
   #:use-module (guix utils))
 
+(define (make-no-gprofng-binutils target)
+    (package
+      (inherit (cross-binutils target))
+      (arguments
+        (substitute-keyword-arguments (package-arguments (cross-binutils target))
+          ((#:configure-flags flags)
+            #~(append #$flags
+              (list "--enable-gprofng=no")))))
+      (native-inputs
+        (modify-inputs
+          (package-native-inputs (cross-binutils target))
+          (delete "bison")))
+))
+
 (define (make-nsis machine target-arch nsis-target-type)
   (let* ((triplet (string-append machine "-" "w64-mingw32"))
-         (xbinutils (cross-binutils triplet))
+         (xbinutils (make-no-gprofng-binutils triplet))
          (xlibc (cross-libc triplet))
          (xgcc (cross-gcc triplet #:libc xlibc)))
     (package
