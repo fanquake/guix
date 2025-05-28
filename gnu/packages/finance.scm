@@ -153,7 +153,7 @@
   ;; <https://bitcoincore.org/en/lifecycle/#schedule>.
   (package
     (name "bitcoin-core")
-    (version "28.1")
+    (version "29.0")
     (source (origin
               (method url-fetch)
               (uri
@@ -162,61 +162,42 @@
               (sha256
                (base32
                 "1fl312ns86syc6871il9l3lzf96nm6jhnj92qyvxkyf78782vbn5"))))
-    (build-system gnu-build-system)
+    (build-system cmake-build-system)
     (native-inputs
-     (list autoconf
-           automake
-           libtool
-           pkg-config
-           python ; for the tests
-           util-linux ; provides the hexdump command for tests
-           qttools-5))
+     (list python ; for the tests
+           qttools-6))
     (inputs
      (list bdb-4.8 ; 4.8 required for compatibility
            boost
            libevent
-           miniupnpc
-           qtbase-5
+           qtbase-6
            sqlite))
     (arguments
-     `(#:configure-flags
-       (list
-        ;; Boost is not found unless specified manually.
-        (string-append "--with-boost="
-                       (assoc-ref %build-inputs "boost"))
-        ;; XXX: The configure script looks up Qt paths by
-        ;; `pkg-config --variable=host_bins Qt5Core`, which fails to pick
-        ;; up executables residing in 'qttools-5', so we specify them here.
-        (string-append "ac_cv_path_LRELEASE="
-                       (assoc-ref %build-inputs "qttools")
-                       "/bin/lrelease")
-        (string-append "ac_cv_path_LUPDATE="
-                       (assoc-ref %build-inputs "qttools")
-                       "/bin/lupdate"))
-       #:phases
-       (modify-phases %standard-phases
-         (add-before 'configure 'make-qt-deterministic
-           (lambda _
-             ;; Make Qt deterministic.
-             (setenv "QT_RCC_SOURCE_DATE_OVERRIDE" "1")
-             #t))
-         (add-before 'build 'set-no-git-flag
-           (lambda _
-             ;; Make it clear we are not building from within a git repository
-             ;; (and thus no information regarding this build is available
-             ;; from git).
-             (setenv "BITCOIN_GENBUILD_NO_GIT" "1")
-             #t))
-         (add-before 'check 'set-home
-           (lambda _
-             (setenv "HOME" (getenv "TMPDIR")) ; tests write to $HOME
-             #t))
-         (add-after 'check 'check-functional
-           (lambda _
-             (invoke
-              "python3" "./test/functional/test_runner.py"
-              (string-append "--jobs=" (number->string (parallel-job-count))))
-             #t)))))
+     (list #:out-of-source? #t
+           #:configure-flags
+           #~(list "-DWITH_BDB=ON")
+
+           #:phases
+           #~(modify-phases %standard-phases
+               ;; Make Qt deterministic.
+               (add-before 'configure 'make-qt-deterministic
+                 (lambda _
+                   (setenv "QT_RCC_SOURCE_DATE_OVERRIDE" "1")))
+               ;; Make it clear we are not building from within a git repository
+               ;; (and thus no information regarding this build is available
+               ;; from git).
+               (add-before 'build 'set-no-git-flag
+                 (lambda _
+                   (setenv "BITCOIN_GENBUILD_NO_GIT" "1")))
+               ;; tests write to $HOME
+               (add-before 'check 'set-home
+                 (lambda _
+                   (setenv "HOME" (getenv "TMPDIR"))))
+               (add-after 'check 'check-functional
+                 (lambda _
+                   (invoke
+                    "python3" "./build/test/functional/test_runner.py"
+                    (string-append "--jobs=" (number->string (parallel-job-count))))))))
     (home-page "https://bitcoincore.org/")
     (synopsis "Bitcoin peer-to-peer client")
     (description
