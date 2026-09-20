@@ -2747,6 +2747,64 @@ This is not a through or through2 stream. It doesn't transform the data, it just
                         (list "LICENSE" "package.json" "README.md"))
               (chdir "output"))))))))
 
+(define-public node-mk-dirs
+  (package
+    (name "node-mk-dirs")
+    (version "3.0.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/lukeed/mk-dirs")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "1vfdf2w1wg4r2gxqmdwmjysz5l17rxa8cv285g1va70ci0kvsgx8"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies))))
+          ;; We need to substitute bundt to build async and sync files
+          ;; as distributed in original tarball: index.js and index.mjs.
+          (replace 'build
+            (lambda _
+              (invoke "esbuild"
+                      "src/async.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=cjs"
+                      "--outfile=dist/index.js")
+              (invoke "esbuild"
+                      "src/async.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=esm"
+                      "--outfile=dist/index.mjs")
+              (invoke "esbuild"
+                      "src/sync.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=cjs"
+                      "--outfile=sync/index.js")
+              (invoke "esbuild"
+                      "src/sync.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=esm"
+                      "--outfile=sync/index.mjs"))))))
+    (native-inputs (list node-esbuild))
+    (home-page "https://github.com/lukeed/mk-dirs")
+    (synopsis "Make directories recursively")
+    (description
+     "This package provides a utility to make a directory and its parents,
+recursively.  It is like @code{mkdir -p} command for JavaScript.")
+    (license license:expat)))
+
 (define-public node-mkdirp
   (package
     (name "node-mkdirp")
