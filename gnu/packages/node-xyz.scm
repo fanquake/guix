@@ -1694,6 +1694,36 @@ URI to a file path.  It accepts a @code{file:} URI and returns a file path
 suitable for use with the @code{fs} module functions.")
     (license license:expat)))
 
+(define-public node-flru
+  (package
+    (name "node-flru")
+    (version "1.0.2")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/lukeed/flru")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "1kvk74z4wqpw68z8z6lwjsx42qxqi2m54a60gfq8q485dy7ihjrz"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies)))))))
+    (native-inputs (list node-bundt))
+    (home-page "https://github.com/lukeed/flru")
+    (synopsis "Least Recently Used (LRU) cache")
+    (description
+     "This package provides an @acronym{LRU, Least Recently Used} cache.  The @code{flru}
+cache stores active and inactive keys instead of purging them, improving performance.")
+    (license license:expat)))
+
 (define-public node-glob
   (package
     (name "node-glob")
