@@ -3991,6 +3991,59 @@ resolve all imports.")
 operations.")
     (license license:expat)))
 
+(define-public node-rewrite-imports
+  (package
+    (name "node-rewrite-imports")
+    (version "3.0.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/lukeed/rewrite-imports")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "0bji1dpjaiqgfx6c2amx7896mx98rgdain0234avlby9ya9h471j"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies))))
+          (replace 'build
+            (lambda _
+              (invoke "esbuild"
+                      "src/index.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=cjs"
+                      "--outfile=dist/index.js")
+              (invoke "esbuild"
+                      "src/index.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=esm"
+                      "--outfile=dist/index.mjs")
+              (invoke "esbuild"
+                      "src/index.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=iife"
+                      "--global-name=rewriteImports"
+                      "--minify"
+                      "--outfile=dist/index.min.js"))))))
+    (native-inputs (list node-esbuild))
+    (home-page "https://github.com/lukeed/rewrite-imports")
+    (synopsis
+     "Utility to rewrite statements via RegExp")
+    (description
+     "This package provides a utility to rewrite @code{import} statements into
+@code{require()} calls, using regular expressions.")
+    (license license:expat)))
+
 (define-public node-safe-buffer
   (package
     (name "node-safe-buffer")
