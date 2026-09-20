@@ -727,6 +727,21 @@ Node.js console output.")
 interfaces in Node.js.")
     (license license:expat)))
 
+(define-public node-commander-2
+  (package
+    (inherit node-commander)
+    (name "node-commander")
+    (version "2.20.3")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/tj/commander.js")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "01a0alfi2djch82q5alw9lywz0x2l3hxs0ph93az0nhfh64gpwx1"))))))
+
 (define-public node-concat-map
   (package
     (name "node-concat-map")
