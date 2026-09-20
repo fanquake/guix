@@ -2206,6 +2206,38 @@ that connects to a specified HTTP or HTTPS proxy server, and can be used with
 the built-in https module.")
     (license license:expat)))
 
+(define-public node-is-reference
+  (package
+    (name "node-is-reference")
+    (version "3.0.3")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/Rich-Harris/is-reference")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "17ibrhq98lbax9zm57jczq0ssphdw4qryfz45carydfca86z9awf"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies)))))))
+    (inputs (list node-types-estree))
+    (home-page "https://github.com/Rich-Harris/is-reference")
+    (synopsis "Utility for determining whether an AST node is a reference")
+    (description
+     "This package provides a method to determinate if an @acronym{AST, Abstract
+Syntax Tree} node is a reference.  E.g. in @code{var foo} and  @code{var obj =
+@{ foo: 1 @}}, both @code{foo} are @code{Identifier}, but just the first case is
+a reference.  They must therefore be treated differently for scope analysis.")
+    (license license:expat)))
+
 (define-public node-jpeg-js
   (package
     (name "node-jpeg-js")
