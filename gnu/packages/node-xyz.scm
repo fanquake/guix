@@ -4741,6 +4741,55 @@ The stdout/stderr objects specifies a level of support for color through a .leve
     (home-page (git-reference-url (origin-uri source)))
     (license license:expat)))
 
+(define-public node-terser
+  (package
+    (name "node-terser")
+    (version "4.8.1")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/terser/terser")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "0nvp11xx57whlxn81gd1vf2pk8i1pnasf0mawinp9n6fmhf9y140"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json"
+                (delete-dev-dependencies)
+                (delete-fields '("scripts.prepare")))))
+          (replace 'build
+            (lambda _
+              (invoke "esbuild"
+                      "main.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=cjs"
+                      "--external:commander"
+                      "--external:source-map"
+                      "--external:source-map-support"
+                      "--outfile=dist/bundle.min.js"
+                      "--sourcemap"))))))
+    (native-inputs (list node-esbuild))
+    (inputs
+     (list node-commander-2             ;-2.20.3
+           node-source-map              ;-0.6.1
+           node-source-map-support))    ;-0.5.21
+    (home-page "https://terser.org")
+    (synopsis
+     "JavaScript parser, mangler/compressor toolkit for ES6+")
+    (description
+     "Terser is a standard minifier for JavaScript code.  It shrinks variable
+names, removes whitespace and comments, and drops unused code.")
+    (license license:bsd-2)))
+
 (define-public node-tiddlywiki
   (package
     (name "node-tiddlywiki")
