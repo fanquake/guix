@@ -567,6 +567,45 @@ on buffers for use with WebSocket implementations.  It provides efficient
 buffer masking and unmasking operations.")
     (license license:expat)))
 
+(define-public node-bundt
+  (package
+    (name "node-bundt")
+    (version "1.1.5")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/lukeed/bundt")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "0n228saf3gqcg95864bdb9i0mvsl65i66v7gx9rjndhlanssypwz"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies)))))))
+    (inputs
+     (list node-terser
+           node-rewrite-imports
+           node-mk-dirs
+           node-kleur))
+    (home-page "https://github.com/lukeed/bundt")
+    (synopsis "Simple bundler for modules")
+    (description
+     "This package provides a bundler for modules with some features:
+
+@itemize
+@item Release CommonJS, ES Module, and UMD targets.
+@item Easily configured through @code{package.json}.
+@item Optionally control Terser settings.
+@end itemize")
+    (license license:expat)))
+
 (define-public node-chalk
   (package
     (name "node-chalk")
