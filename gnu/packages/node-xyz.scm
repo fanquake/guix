@@ -113,6 +113,52 @@
 architecture supporting plugins.")
     (license license:expat)))
 
+(define-public node-acorn-import-attributes
+  (package
+    (name "node-acorn-import-attributes")
+    (version "1.9.3")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+              (url "https://github.com/xtuc/acorn-import-attributes")
+              (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "02h5q37106f9paj3b64marvgy214723gdz8sby8077x7qbifcqgc"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies))))
+          (replace 'build
+            (lambda _
+              (invoke "esbuild"
+                      "src/index.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=cjs"
+                      "--external:acorn"
+                      "--outfile=lib/index.js")
+              (invoke "esbuild"
+                      "src/index.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=esm"
+                      "--external:acorn"
+                      "--outfile=lib/index.mjs"))))))
+    (native-inputs (list node-esbuild))
+    (inputs (list node-acorn))
+    (home-page "https://github.com/xtuc/acorn-import-attributes")
+    (synopsis "Support for import assertions in acorn")
+    (description "This package provides a module plugin that can be used
+to extend the Acorn Parser class.")
+    (license license:expat)))
+
 (define-public node-addon-api
   (package
     (name "node-addon-api")
