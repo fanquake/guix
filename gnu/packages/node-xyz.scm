@@ -2387,6 +2387,42 @@ running inside Windows Subsystem for Linux.")
 JavaScript.")
     (license license:expat)))
 
+(define-public node-kleur
+  (package
+    (name "node-kleur")
+    (version "4.1.5")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/lukeed/kleur")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "1l8qaaz1j8038idkvq1a0vnfwb59d1vw0qih9kpr0cbcil79fgs9"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies)))))))
+    (home-page "https://github.com/lukeed/kleur")
+    (synopsis
+     "Node.js library for formatting terminal text with ANSI colors")
+    (description
+     "This package provides a Node.js library for formatting terminal text
+with ANSI colors.  With some features:
+@itemize
+@item No dependencies;
+@item Supports nested and chained colors;
+@item No @code{String.prototype} modifications;
+@item Conditional color support.
+@end itemize")
+    (license license:expat)))
+
 (define-public node-long-stack-traces
   (package
     (name "node-long-stack-traces")
