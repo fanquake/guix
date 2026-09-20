@@ -2661,6 +2661,42 @@ with ANSI colors.  With some features:
 @end itemize")
     (license license:expat)))
 
+(define-public node-locate-character
+  (package
+    (name "node-locate-character")
+    (version "3.0.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/Rich-Harris/locate-character")
+             (commit (string-append "v" version))))
+       (sha256
+        (base32 "1c8gvfrfwx63rr0fmimarq1mnz40qma79y2ksbv8c45z3jx3cjxw"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies))))
+          (replace 'build
+            (lambda _
+              (invoke "tsc" "src/index.js" "src/types.d.ts"
+                      "--allowJs" "--checkJs"
+                      "--declaration" "--emitDeclarationOnly"
+                      "--outDir" "types"
+                      "--ignoreConfig"))))))
+    (native-inputs (list node-typescript))
+    (home-page "https://github.com/Rich-Harris/locate-character")
+    (synopsis "Get character indexes in a string")
+    (description
+     "This package provides a method to get the line and column index number
+of a specific character in a string.")
+    (license license:expat)))
+
 (define-public node-long-stack-traces
   (package
     (name "node-long-stack-traces")
