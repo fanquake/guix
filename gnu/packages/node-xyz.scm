@@ -37,6 +37,7 @@
   #:use-module (gnu packages web) ; node-esbuild
   #:use-module (guix build-system cargo)
   #:use-module (guix build-system copy)
+  #:use-module (guix build utils)
   #:use-module (guix build-system node)
   #:use-module ((guix build-system pyproject) #:select (pypi-uri))
   #:use-module (guix download)
@@ -2398,6 +2399,81 @@ such as rainbows.")
 Uses fs.stat.")
     (home-page (git-reference-url (origin-uri source)))
     (license license:isc)))
+
+(define-public node-jridgewell-sourcemap-codec
+  (package
+    (name "node-jridgewell-sourcemap-codec")
+    (version "1.6.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/jridgewell/sourcemaps")
+             (commit (string-append "sourcemap-codec/" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "1vlzqh2ndbrjga554z7ah8a9hkdm35ic3vy9j0d9dvq3ncwf065c"))
+       (snippet
+        #~(begin
+            (use-modules (guix build utils))
+            (delete-all-but "packages" "sourcemap-codec")
+            (delete-all-but "." "packages")
+            (copy-recursively "packages/sourcemap-codec" "./")
+            (delete-file-recursively "packages")
+            (substitute* "tsconfig.json"
+              (("\"extends\": \"../../tsconfig.json\"," all)
+               (string-append "// " all)))))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json" (delete-dev-dependencies))))
+          (replace 'build
+            (lambda* (#:key inputs #:allow-other-keys)
+              (invoke "esbuild"
+                      "src/sourcemap-codec.ts"
+                      "--bundle"
+                      "--platform=node"
+                      "--target=es2015"
+                      "--format=esm"
+                      "--outfile=dist/sourcemap-codec.mjs")
+              (invoke "esbuild"
+                      "src/sourcemap-codec.ts"
+                      "--bundle"
+                      "--platform=node"
+                      "--target=es2015"
+                      "--format=cjs"
+                      "--outfile=dist/sourcemap-codec.umd.js")
+              (invoke "tsc" "src/sourcemap-codec.ts"
+                      "--declaration"
+                      "--emitDeclarationOnly"
+                      "--declarationDir" "types"
+                      "--esModuleInterop"
+                      "--allowSyntheticDefaultImports"
+                      "--module" "esnext"
+                      "--moduleResolution" "bundler"
+                      "--target" "es2015"
+                      "--lib" "es2015,dom"
+                      "--strict"
+                      "--typeRoots" (search-input-directory
+                                     inputs
+                                     "/lib/node_modules/@types")
+                      "--types" "node"
+                      "--ignoreConfig")
+              (copy-file "types/sourcemap-codec.d.ts" "types/sourcemap-codec.d.cts")
+              (copy-file "types/sourcemap-codec.d.ts" "types/sourcemap-codec.d.mts"))))))
+    (native-inputs (list node-esbuild node-types-node node-typescript))
+    (inputs (list node-types-node))
+    (home-page
+     "https://github.com/jridgewell/sourcemaps/tree/main/packages/sourcemap-codec")
+    (synopsis "Encode/decode sourcemap mappings")
+    (description "This package makes the encode/decode process of @{mapping} property
+of a @code{sourcemap} slightly easier.")
+    (license license:expat)))
 
 (define-public node-jsonc-parser
   (package
