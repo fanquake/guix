@@ -2778,6 +2778,57 @@ this cache will keep that many of the most recently accessed items.")
     (home-page (git-reference-url (origin-uri source)))
     (license license:isc)))
 
+(define-public node-magic-string
+  (package
+    (name "node-magic-string")
+    (version "0.27.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/rich-harris/magic-string")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "0wn9hnyg122l3basy2b2avkwcrwdmh972iavh29hl4hgk81qv5j9"))))
+    (build-system node-build-system)
+    (arguments
+     (list
+      #:tests? #f
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'patch-dependencies 'delete-dev-dependencies
+            (lambda _
+              (modify-json "package.json"
+                (delete-dev-dependencies)
+                (replace-json-fields '((("exports" ".") .
+                                        (("types" .  "./index.d.ts")
+                                         ("import" . "./dist/magic-string.es.mjs")
+                                         ("require" . "./dist/magic-string.cjs.js"))))))))
+          (replace 'build
+            (lambda _
+              (invoke "esbuild"
+                      "src/index.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=cjs"
+                      "--external:@jridgewell/sourcemap-codec"
+                      "--outfile=dist/magic-string.cjs.js")
+              (invoke "esbuild"
+                      "src/index.js"
+                      "--bundle"
+                      "--platform=node"
+                      "--format=esm"
+                      "--external:@jridgewell/sourcemap-codec"
+                      "--outfile=dist/magic-string.es.mjs"))))))
+    (native-inputs (list node-esbuild))
+    (inputs (list node-jridgewell-sourcemap-codec))
+    (home-page "https://github.com/rich-harris/magic-string")
+    (synopsis "Modify strings and generate sourcemaps")
+    (description "This package provides a utility for manipulating strings and
+generating source maps from source code.")
+    (license license:expat)))
+
 (define-public node-mersenne
   (package
     (name "node-mersenne")
