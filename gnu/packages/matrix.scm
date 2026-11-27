@@ -11,7 +11,7 @@
 ;;; Copyright © 2025 Arjan Adriaanse <arjan@adriaan.se>
 ;;; Copyright © 2025 Sharlatan Hellseher <sharlatanus@gmail.com>
 ;;; Copyright © 2026 Zheng Junjie <z572@z572.online>
-;;; Copyright © 2026 orahcio <orahcio@gmail.com>
+;;; Copyright © 2026 Orahcio Felício de Sousa <orahcio@gmail.com>
 ;;; Copyright © 2025 Isidor Zeuner <guix@quidecco.pl>
 ;;;
 ;;; This file is part of GNU Guix.

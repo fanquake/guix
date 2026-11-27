@@ -40,7 +40,7 @@
 ;;; Copyright © 2024, 2025 Ashish SHUKLA <ashish.is@lostca.se>
 ;;; Copyright © 2024 Artyom V. Poptsov <poptsov.artyom@gmail.com>
 ;;; Copyright © 2025 John Khoo <johnkhootf@gmail.com>
-;;; Copyright © 2026 orahcio <orahcio@gmail.com>
+;;; Copyright © 2026 Orahcio Felício de Sousa <orahcio@gmail.com>
 ;;; Copyright © 2026 Wilko Meyer <w@wmeyer.eu>
 ;;; Copyright © 2026 François Joulaud <francois-oss@avalenn.eu>
 ;;;

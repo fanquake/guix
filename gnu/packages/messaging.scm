@@ -47,7 +47,7 @@
 ;;; Copyright © 2025 Evgeny Pisemsky <mail@pisemsky.site>
 ;;; Copyright © 2025 Janneke Nieuwenhuizen <janneke@gnu.org>
 ;;; Copyright © 2025, 2026 Adrien 'neox' Bourmault <neox@gnu.org>
-;;; Copyright © 2026 orahcio <orahcio@gmail.com>
+;;; Copyright © 2026 Orahcio Felício de Sousa <orahcio@gmail.com>
 ;;; Copyright © 2026 Sughosha <sughosha@disroot.org>
 ;;; Copyright © 2026 Tomás Ortín Fernández (quanrong) <quanrong@mailbox.org>
 ;;; Copyright © 2026 Goran Vukoman <g@odyss3us.net>

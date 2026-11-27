@@ -182,7 +182,7 @@
 ;;; Copyright © 2026 Daniel Khodabakhsh <d@niel.khodabakh.sh>
 ;;; Copyright © 2026 Akiyoshi Suda <code@akiyoshisuda.com>
 ;;; Copyright © 2026 Sughosha <sughosha@disroot.org>
-;;; Copyright © 2026 orahcio <orahcio@gmail.com>
+;;; Copyright © 2026 Orahcio Felício de Sousa <orahcio@gmail.com>
 ;;; Copyright © 2026 John Dawson <dawson.john.andrew@gmail.com>
 ;;; Copyright © 2026 Kevin Deldycke <kevin@deldycke.com>
 ;;; Copyright © 2026 Ryan Desfosses <rdesfo@sdf.org>

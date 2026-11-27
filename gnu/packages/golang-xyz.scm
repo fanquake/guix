@@ -78,9 +78,8 @@
 ;;; Copyright © 2026 Vinicius Monego <monego@posteo.net>
 ;;; Copyright © 2026 Daniel Littlewood <dan@danielittlewood.xyz>
 ;;; Copyright © 2026 Sughosha <sughosha@disroot.org>
-;;; Copyright © 2026 orahcio <orahcio@gmail.com>
-;;; Copyright © 2026 Luca Kredel <luca.kredel@web.de>
 ;;; Copyright © 2026 Orahcio Felício de Sousa <orahcio@gmail.com>
+;;; Copyright © 2026 Luca Kredel <luca.kredel@web.de>
 ;;; Copyright © 2026 Ryan Prior <rprior@protonmail.com>
 ;;; Copyright © 2026 Untrusem <mysticmoksh@riseup.net>
 ;;; Copyright © 2026 Nikita Alkhovik <forgoty13@gmail.com>

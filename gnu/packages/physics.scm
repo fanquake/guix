@@ -3,7 +3,7 @@
 ;;; Copyright © 2025 Vinicius Monego <monego@posteo.net>
 ;;; Copyright © 2025, 2026 Sharlatan Hellseher <sharlatanus@gmail.com>
 ;;; Copyright © 2026 Danny Milosavljevic <dannym@friendly-machines.com>
-;;; Copyright © 2026 orahcio <orahcio@gmail.com>
+;;; Copyright © 2026 Orahcio Felício de Sousa <orahcio@gmail.com>
 ;;;
 ;;; This file is part of GNU Guix.
 ;;;
