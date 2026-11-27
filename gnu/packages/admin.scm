@@ -4474,6 +4474,8 @@ everyone's screenshots nowadays.")
     (inputs
      `(("bash" ,bash)
        ("tput" ,ncurses)))
+    (propagated-inputs
+      (list coreutils sed guix inetutils))
     (arguments
      `(#:modules ((guix build utils))
        #:builder
