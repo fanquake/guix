@@ -4314,6 +4314,7 @@ Intel DRM Driver.")
            #:phases
            #~(modify-phases %standard-phases
                (delete 'configure))))         ; no configure script
+    (propagated-inputs (list coreutils))
     (home-page "https://github.com/dylanaraps/neofetch")
     (synopsis "System information script")
     (description "Neofetch is a command-line system information tool written in
